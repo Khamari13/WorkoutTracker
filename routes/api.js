@@ -1,9 +1,9 @@
 const router = require("express").Router();
-const workout = require("..models/workout.js");
+const db = require("../models");
 const path = require("path");
 
 router.post("/api/workouts", ({ body }, res) => {
-    workout.create(body)
+    db.Workout.create(body)
     .then(dbWorkout => {
         res.json(dbWorkout);
     })
@@ -12,8 +12,8 @@ router.post("/api/workouts", ({ body }, res) => {
     });
 });
 
-router.post("/workouts/bulk", ({ body }, res) => {
-    workout.insertMany(body)
+router.get("/api/workouts", (req, res) => {
+    db.Workout.find({})
     .then(dbWorkout => {
         res.json(dbWorkout);
     })
@@ -23,7 +23,7 @@ router.post("/workouts/bulk", ({ body }, res) => {
 });
 
 router.get("/api/workout/range", (req, res) => {
-    workout.find({})
+    db.Workout.find({})
     
     .then(dbWorkout => {
         res.json(dbWorkout);
@@ -33,12 +33,10 @@ router.get("/api/workout/range", (req, res) => {
     });
 });
 
-router.put('/api/workouts/:id', function ({body,params}, res) {
-    Workout.findByIdAndUpdate(
-      params.id,
+router.put('/api/workouts/:id', function (req, res) {
+    db.Workout.findByIdAndUpdate(
+      req.params.id,
       { $push: { exercises: body } },
-      // "runValidators" will ensure new exercises meet our schema requirements
-      { new: true, runValidators: true }
     )
       .then(dbWorkout => {
         res.json(dbWorkout);

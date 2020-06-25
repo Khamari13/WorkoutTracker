@@ -1,26 +1,21 @@
 const express = require("express");
 
 const morg = require("morgan");
-const goose = require("mongoose");
+const mongoose = require("mongoose");
 
 const PORT = process.env.PORT || 3000;
 
 const app = express();
 
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
-goose.connect(MONGODB_URI);
+mongoose.connect(MONGODB_URI);
 
 app.use(morg("dev"));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use(express.static("public"));
-
-goose.connect("mongodb://localhost/workout", {
-    useNewUrlParser: true,
-    useFindAndModify: false
-});
+app.use(express.static(__dirname + '/public'))
 
 //Defining the routes
 app.use(require("./routes/api.js"));
